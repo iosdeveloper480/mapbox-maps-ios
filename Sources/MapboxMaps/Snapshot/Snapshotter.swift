@@ -96,6 +96,8 @@ public class Snapshotter {
                 return
             }
 
+            sendTurnstileEvent()
+
             let mbxImage = snapshot.image()
 
             guard let uiImage = UIImage(mbxImage: mbxImage, scale: scale) else {
@@ -329,7 +331,7 @@ extension Snapshotter {
         MapboxMap.clearData(for: options.resourceOptions, completion: completion)
     }
 
-    // MARK: - Attribution
+// MARK: - Attribution
 
     private static func blurredAttributionBackground(for image: UIImage, rect: CGRect, completion: @escaping (CGImage?) -> Void) {
         DispatchQueue.global().async {
@@ -402,4 +404,12 @@ extension Snapshotter {
         attributionView.layer.contents = blurredImage
         attributionView.layer.render(in: context)
     }
+}
+
+// MARK: - Telemetry
+internal func sendTurnstileEvent() {
+    let accessToken = ResourceOptionsManager.default.defaultAccessToken()
+    let eventsManager = EventsManager(accessToken: accessToken)
+
+    eventsManager.telemetry.turnstile()
 }
