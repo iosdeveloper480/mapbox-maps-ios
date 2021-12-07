@@ -85,7 +85,8 @@ public class Snapshotter {
         let style = self.style
         let options = self.options
 
-        mapSnapshotter.start { (expected) in
+        mapSnapshotter.start { [weak self] (expected) in
+
             if expected.isError() {
                 completion(.failure(.snapshotFailed(reason: expected.error as? String)))
                 return
@@ -103,7 +104,9 @@ public class Snapshotter {
                 return
             }
 
-            sendTurnstileEvent()
+            if let self = self {
+                self.sendTurnstileEvent()
+            }
 
             // Render attributions over the snapshot
             let sourceAttributions = style.sourceAttributions()
