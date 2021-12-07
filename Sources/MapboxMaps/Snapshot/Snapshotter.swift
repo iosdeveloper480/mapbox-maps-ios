@@ -96,14 +96,14 @@ public class Snapshotter {
                 return
             }
 
-            sendTurnstileEvent()
-
             let mbxImage = snapshot.image()
 
             guard let uiImage = UIImage(mbxImage: mbxImage, scale: scale) else {
                 completion(.failure(.snapshotFailed(reason: "Could not convert internal Image type to UIImage.")))
                 return
             }
+
+            sendTurnstileEvent()
 
             // Render attributions over the snapshot
             let sourceAttributions = style.sourceAttributions()
@@ -252,6 +252,14 @@ public class Snapshotter {
                                 padding: padding.toMBXEdgeInsetsValue(),
                                 bearing: bearing?.NSNumber,
                                 pitch: pitch?.NSNumber))
+    }
+
+    // MARK: - Telemetry
+    internal func sendTurnstileEvent() {
+        let accessToken = ResourceOptionsManager.default.defaultAccessToken()
+        let eventsManager = EventsManager(accessToken: accessToken)
+
+        eventsManager.telemetry.turnstile()
     }
 }
 
@@ -404,12 +412,4 @@ extension Snapshotter {
         attributionView.layer.contents = blurredImage
         attributionView.layer.render(in: context)
     }
-}
-
-// MARK: - Telemetry
-internal func sendTurnstileEvent() {
-    let accessToken = ResourceOptionsManager.default.defaultAccessToken()
-    let eventsManager = EventsManager(accessToken: accessToken)
-
-    eventsManager.telemetry.turnstile()
 }
