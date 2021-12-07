@@ -77,6 +77,7 @@ public class Snapshotter {
      - Parameter completion: The block to call once the snapshot has been generated, providing a
      `Result<UIImage, SnapshotError>` type.
      */
+    // swiftlint:disable:next cyclomatic_complexity
     public func start(overlayHandler: SnapshotOverlayHandler?,
                       completion: @escaping (Result<UIImage, SnapshotError>) -> Void) {
 
