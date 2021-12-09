@@ -63,9 +63,13 @@ internal class EventsManager: EventsListener {
     private func process(mapEvent: EventType.Maps) {
         switch mapEvent {
         case .loaded:
-            telemetry?.turnstile()
+            sendTurnstileEvent()
             telemetry?.send(event: mapEvent.typeString)
         }
+    }
+
+    func sendTurnstileEvent() {
+        telemetry?.turnstile()
     }
 }
 
