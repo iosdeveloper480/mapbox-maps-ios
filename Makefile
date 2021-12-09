@@ -257,7 +257,11 @@ clean-for-device-build:
 clean-test-with-device-farm: clean-for-device-build test-with-device-farm
 
 .PHONY: test-with-firebase
-test-with-firebase: 
+test-with-firebase:
+	xcodebuild \
+		-workspace Apps/Apps.xcworkspace \
+		-scheme $(SCHEME) \
+		-sdk iphoneos build-for-testing;
 	cd ${BUILD_DIR}/Build/Products; \
 	zip -r ${APP_NAME}.zip Debug-iphoneos $(SCHEME)_iphoneos*.xctestrun;
 	gcloud firebase test ios run --test ${BUILD_DIR}/Build/Products/${APP_NAME}.zip --device model=iphone11,version=13.6;
