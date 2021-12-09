@@ -612,13 +612,13 @@ commands:
       - inject-mapbox-public-token
 
   login-google-cloud-platform:
-  steps:
-    - run:
-        name: Log in to Google Cloud Platform
-        command: |
-          echo "${GOOGLE_CLOUD_KEY_FILE}" > secret.json
-          gcloud auth activate-service-account --key-file secret.json --project mapbox-maps-ios-dc24c
-          rm secret.json
+    steps:
+      - run:
+          name: Log in to Google Cloud Platform
+          command: |
+            echo "${GOOGLE_CLOUD_KEY_FILE}" > secret.json
+            gcloud auth activate-service-account --key-file secret.json --project mapbox-maps-ios-dc24c
+            rm secret.json
 
   inject-mapbox-public-token:
     steps:
