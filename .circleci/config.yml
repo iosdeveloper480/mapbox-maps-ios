@@ -432,9 +432,9 @@ jobs:
           name: Locate derived data directory
           command: |
             xcodebuild \
+              -showBuildSettings \
               -workspace Apps/Apps.xcworkspace \
               -scheme '<< parameters.scheme >>' \
-              -sdk iphoneos build-for-testing \
               | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
               >> $BASH_ENV
       - run:
