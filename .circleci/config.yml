@@ -730,18 +730,18 @@ commands:
             source $BASH_ENV
 
     prepare-ios-codesign-keychain:
-        steps:
-            - run:
-                command: |
-                    sudo gem install fastlane match
-                    fastlane run create_keychain name:fastlane_keychain password:$FASTLANE_KEYCHAIN_PASSWORD unlock:true timeout:3600
-                    fastlane match --readonly
-                    security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $FASTLANE_KEYCHAIN_PASSWORD fastlane_keychain
-                    set -- ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision
-                    ls ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision
-                    echo "------Rename profile '$1' to 'embedded.mobileprovision'------"
-                    mv "$1" embedded.mobileprovision
-                name: Prepare codesign keychain
+      steps:
+        - run:
+          command: |
+            sudo gem install fastlane match
+            fastlane run create_keychain name:fastlane_keychain password:$FASTLANE_KEYCHAIN_PASSWORD unlock:true timeout:3600
+            fastlane match --readonly
+            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $FASTLANE_KEYCHAIN_PASSWORD fastlane_keychain
+            set -- ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision
+            ls ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision
+            echo "------Rename profile '$1' to 'embedded.mobileprovision'------"
+            mv "$1" embedded.mobileprovision
+          name: Prepare codesign keychain
 
   install-dependencies:
     description: "Install Dependencies"
