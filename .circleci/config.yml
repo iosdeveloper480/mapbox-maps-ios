@@ -424,6 +424,7 @@ jobs:
           always-run: << parameters.device-tests-always-run >>
       - configure-environment
       - install-dependencies
+      - install-glcoud
       - login-google-cloud-platform
       # There's a command for this, but it only works if run *after* the build.
       # In this case, we need to determine the derived data path *before* building.
@@ -710,21 +711,26 @@ commands:
       - store_artifacts:
           path: << parameters.artifact_name >>.zip
 
+  install-glcoud:
+    description: "Install gcloud"
+    steps:
+      - run:
+          name: Install gcloud
+          command: |
+            brew install ccache chargepoint/xcparse/xcparse
+            mkdir /tmp/gcloud && cd /tmp/gcloud
+            curl -OL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-363.0.0-darwin-x86_64.tar.gz
+            echo '8fff2401f9a2ac2dee0ef335ac2273a2d6178f2ef8c3632981b80571a513553f *google-cloud-sdk-363.0.0-darwin-x86_64.tar.gz' >> checksumfile
+            shasum -a 256 -c checksumfile
+            tar zxvf google-cloud-sdk-363.0.0-darwin-x86_64.tar.gz
+            ./google-cloud-sdk/install.sh -q
+            echo "source /tmp/gcloud/google-cloud-sdk/path.bash.inc" >> $BASH_ENV
+            echo "source /tmp/gcloud/google-cloud-sdk/completion.bash.inc" >> $BASH_ENV
+            source $BASH_ENV
+
   install-dependencies:
     description: "Install Dependencies"
     steps:
-      - run:
-        command: |
-          brew install ccache chargepoint/xcparse/xcparse
-          mkdir /tmp/gcloud && cd /tmp/gcloud
-          curl -OL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-363.0.0-darwin-x86_64.tar.gz
-          echo '8fff2401f9a2ac2dee0ef335ac2273a2d6178f2ef8c3632981b80571a513553f *google-cloud-sdk-363.0.0-darwin-x86_64.tar.gz' >> checksumfile
-          shasum -a 256 -c checksumfile
-          tar zxvf google-cloud-sdk-363.0.0-darwin-x86_64.tar.gz
-          ./google-cloud-sdk/install.sh -q
-          echo "source /tmp/gcloud/google-cloud-sdk/path.bash.inc" >> $BASH_ENV
-          echo "source /tmp/gcloud/google-cloud-sdk/completion.bash.inc" >> $BASH_ENV
-          source $BASH_ENV
       - run: brew install jq xcodegen
 
   make-docs:
