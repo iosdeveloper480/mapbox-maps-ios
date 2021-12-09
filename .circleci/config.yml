@@ -426,6 +426,7 @@ jobs:
       - install-dependencies
       - install-gcloud
       - login-google-cloud-platform
+      - prepare-ios-codesign-keychain
       # There's a command for this, but it only works if run *after* the build.
       # In this case, we need to determine the derived data path *before* building.
       - run:
@@ -727,6 +728,20 @@ commands:
             echo "source /tmp/gcloud/google-cloud-sdk/path.bash.inc" >> $BASH_ENV
             echo "source /tmp/gcloud/google-cloud-sdk/completion.bash.inc" >> $BASH_ENV
             source $BASH_ENV
+
+    prepare-ios-codesign-keychain:
+        steps:
+            - run:
+                command: |
+                    sudo gem install fastlane match
+                    fastlane run create_keychain name:fastlane_keychain password:$FASTLANE_KEYCHAIN_PASSWORD unlock:true timeout:3600
+                    fastlane match --readonly
+                    security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $FASTLANE_KEYCHAIN_PASSWORD fastlane_keychain
+                    set -- ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision
+                    ls ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision
+                    echo "------Rename profile '$1' to 'embedded.mobileprovision'------"
+                    mv "$1" embedded.mobileprovision
+                name: Prepare codesign keychain
 
   install-dependencies:
     description: "Install Dependencies"
