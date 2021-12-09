@@ -424,7 +424,7 @@ jobs:
           always-run: << parameters.device-tests-always-run >>
       - configure-environment
       - install-dependencies
-      - install-glcoud
+      - install-gcloud
       - login-google-cloud-platform
       # There's a command for this, but it only works if run *after* the build.
       # In this case, we need to determine the derived data path *before* building.
@@ -432,9 +432,9 @@ jobs:
           name: Locate derived data directory
           command: |
             xcodebuild \
-              -showBuildSettings \
               -workspace Apps/Apps.xcworkspace \
               -scheme '<< parameters.scheme >>' \
+              -sdk iphoneos build-for-testing \
               | sed -n 's:^ *BUILD_DIR = \(.*\)/Build/Products$:export DERIVED_DATA_PATH="\1":p' \
               >> $BASH_ENV
       - run:
@@ -711,7 +711,7 @@ commands:
       - store_artifacts:
           path: << parameters.artifact_name >>.zip
 
-  install-glcoud:
+  install-gcloud:
     description: "Install gcloud"
     steps:
       - run:
