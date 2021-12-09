@@ -713,7 +713,7 @@ commands:
   install-dependencies:
     description: "Install Dependencies"
     steps:
-      - run: brew cask install google-cloud-sdk
+      - run: brew install google-cloud-sdk
       - run: brew install jq xcodegen
 
   make-docs:
