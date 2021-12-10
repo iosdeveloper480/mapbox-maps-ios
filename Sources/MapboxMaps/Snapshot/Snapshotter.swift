@@ -260,10 +260,12 @@ public class Snapshotter {
 
     // MARK: - Telemetry
     internal func sendTurnstileEvent() {
-        let accessToken = options.resourceOptions.accessToken
-        let eventsManager = EventsManager(accessToken: accessToken)
+        if eventsManager == nil {
+            let accessToken = options.resourceOptions.accessToken
+            eventsManager = EventsManager(accessToken: accessToken)
 
-        eventsManager.sendTurnstileEvent()
+        }
+        eventsManager?.sendTurnstileEvent()
     }
 }
 

@@ -450,8 +450,11 @@ open class MapView: UIView {
 
     private func setUpTelemetryLogging() {
         guard let validResourceOptions = resourceOptions else { return }
-        eventsListener = EventsManager(accessToken: validResourceOptions.accessToken)
-        eventsListener?.push(event: .map(event: .loaded))
+
+        if eventsManager == nil {
+            eventsManager = EventsManager(accessToken: validResourceOptions.accessToken)
+        }
+        eventsManager?.push(event: .map(event: .loaded))
     }
 
     // MARK: Location
