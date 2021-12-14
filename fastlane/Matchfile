@@ -1,5 +1,5 @@
 git_url("git@github.com:mapbox/apple-certificates.git")
-git_branch("gl_native")
+git_branch("maps-ios")
 type("development") # The default type, can be: appstore, adhoc, enterprise or development
 app_identifier(["com.mapbox.Examples", "com.mapbox.ExamplesTests"])
 username ENV['MAPBOX_APPLE_ID_EMAIL']
